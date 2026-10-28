@@ -397,7 +397,7 @@ export function Navbar() {
                   htmlFor="member-region"
                   className="block text-xs font-semibold text-charcoal-800 mb-1.5"
                 >
-                  Primary Region (Ghana / Africa)
+                  Primary Region (Ghana)
                 </label>
                 <div className="relative">
                   <MapPin className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3" />

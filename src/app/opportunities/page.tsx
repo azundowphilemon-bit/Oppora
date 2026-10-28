@@ -22,7 +22,7 @@ export default async function OpportunitiesPage() {
       section="opportunities"
       initialListings={listings}
       categories={categories}
-      accentLabel="Opportunities across Ghana & Africa"
+      accentLabel="Opportunities across Ghana"
       heading="Jobs, Scholarships, Internships & Free Courses"
       subheading="Explore verified public portals and community-shared opportunities with official application links and transparent deadlines. Oppora never fabricates job vacancies or scholarships."
       safetyBannerText="Always apply directly on the official institutional website. Never pay application or placement fees to any person or agent."

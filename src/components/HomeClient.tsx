@@ -107,7 +107,7 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
           <div className="max-w-3xl space-y-6">
             <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-gold-400/30 text-gold-200 text-xs font-bold tracking-wide">
               <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-              <span>Built for Ghana &amp; Africa &bull; Opportunities, Housing &amp; Community</span>
+              <span>Built for Ghana &bull; All 16 Regions &bull; Opportunities, Housing &amp; Community</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-display font-bold tracking-tight text-ivory-50 leading-[1.12]">
@@ -120,7 +120,7 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
             <p className="text-base sm:text-lg text-ivory-200 leading-relaxed max-w-2xl">
               Discover verified scholarships, jobs, and free digital courses; connect directly
               for community accommodation; give away or exchange useful personal items; and
-              request or offer practical mentoring across Ghana and Africa.
+              request or offer practical mentoring across all 16 regions of Ghana.
             </p>
 
             {/* Unified Search Bar */}
@@ -220,7 +220,7 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
               id="pillars-heading"
               className="text-2xl sm:text-3xl font-display font-bold text-charcoal-900 mt-1"
             >
-              How Oppora Serves Communities Across Ghana &amp; Africa
+              How Oppora Serves Communities Across Ghana
             </h2>
           </div>
           <Link

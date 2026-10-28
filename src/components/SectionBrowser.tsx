@@ -254,7 +254,7 @@ export function SectionBrowser({
               aria-label="Filter by region"
               className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
             >
-              <option value="all">All Regions (Ghana &amp; Africa)</option>
+              <option value="all">All Regions (Ghana)</option>
               {GHANA_AND_AFRICA_REGIONS.map((reg) => (
                 <option key={reg} value={reg}>
                   {reg}

@@ -262,7 +262,7 @@ export const VERIFIED_OFFICIAL_OPPORTUNITY_PORTALS: Listing[] = [
     description:
       'The African Union Youth Volunteer Corps (AU-YVC) brings people together to share skills, knowledge, creativity, and learning to build a more integrated, prosperous, and peaceful Continent driven by its citizens.\n\nConsult the official African Union portal for current call-for-application dates, eligibility criteria, and required documentation.',
     country: 'Ghana',
-    region: 'Pan-African / Remote across Africa',
+    region: 'Nationwide / Remote across Ghana',
     city: 'Addis Ababa & AU Member States',
     status: 'active',
     isFeatured: true,
@@ -289,7 +289,7 @@ export const VERIFIED_OFFICIAL_OPPORTUNITY_PORTALS: Listing[] = [
     description:
       'ALX offers structured digital skills, software engineering, data science, and professional foundation programs designed for young people across Ghana, Nigeria, Kenya, Rwanda, South Africa, and across the continent.\n\nVisit the official ALX Africa website to view current course catalogs, open enrollment dates, and terms.',
     country: 'Ghana',
-    region: 'Pan-African / Remote across Africa',
+    region: 'Nationwide / Remote across Ghana',
     city: 'Accra Tech Hubs & Online',
     status: 'active',
     isFeatured: false,
@@ -316,7 +316,7 @@ export const VERIFIED_OFFICIAL_OPPORTUNITY_PORTALS: Listing[] = [
     description:
       'The African Development Bank Group recruits professionals, interns, and Young Professionals committed to sustainable economic development and social progress across regional member countries including Ghana.\n\nRather than listing unverified third-party vacancy notices, Oppora links you directly to the official AfDB recruitment portal where current verified openings and deadlines are published.',
     country: 'Ghana',
-    region: 'Pan-African / Remote across Africa',
+    region: 'Nationwide / Remote across Ghana',
     city: 'Abidjan, Accra Country Office & Regional Hubs',
     status: 'active',
     isFeatured: false,

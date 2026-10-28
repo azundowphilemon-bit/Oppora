@@ -64,7 +64,7 @@ export function OpporaLogo({
             lightText ? 'text-gold-200' : 'text-clay-600'
           }`}
         >
-          Ghana &amp; Africa
+          Ghana Community
         </span>
       </div>
     </div>

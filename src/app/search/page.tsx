@@ -88,7 +88,7 @@ function GlobalSearchContent() {
           Search Opportunities, Housing, Items &amp; Community Help
         </h1>
         <p className="text-sm text-ivory-200 max-w-2xl">
-          Filter across every section, category, and region in Ghana and Africa.
+          Filter across every section, category, town, and region in Ghana.
         </p>
       </div>
 

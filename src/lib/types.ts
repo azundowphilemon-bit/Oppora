@@ -144,10 +144,7 @@ export const GHANA_AND_AFRICA_REGIONS = [
   'Bono Region (Sunyani), Ghana',
   'Bono East Region (Techiman), Ghana',
   'Ahafo Region (Goaso), Ghana',
-  'Lagos & West Africa Regional',
-  'Nairobi & East Africa Regional',
-  'Kigali & Central Africa Regional',
-  'Pan-African / Remote across Africa',
+  'Nationwide / Remote across Ghana',
 ] as const;
 
 export const REGION_TOWNS: Record<string, string[]> = {

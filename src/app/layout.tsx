@@ -10,27 +10,28 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oppora-pi.vercel.ap
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Oppora — Opportunities, Housing & Community Across Ghana & Africa',
-    template: '%s | Oppora Ghana & Africa',
+    default: 'Oppora — Opportunities, Housing & Community Across Ghana',
+    template: '%s | Oppora Ghana',
   },
   description:
-    'Connect across Ghana and Africa with verified scholarships, jobs, internships, community-shared accommodation, free item give & exchange, and practical mentoring. 100% free, zero payment processing.',
+    'Connect across all 16 regions of Ghana with verified scholarships, jobs, internships, community-shared accommodation, free item give & exchange, and practical mentoring. 100% free, zero payment processing.',
   keywords: [
     'Ghana opportunities',
-    'Africa scholarships',
+    'Ghana scholarships',
     'Accra internships',
     'Kumasi accommodation sharing',
+    'North East Region Nalerigu Walewale Kpasenkpe',
     'community give and exchange Ghana',
-    'career mentoring Africa',
+    'career mentoring Ghana',
   ],
   openGraph: {
     type: 'website',
     locale: 'en_GH',
     url: siteUrl,
     siteName: 'Oppora',
-    title: 'Oppora — Opportunities, Housing & Community Across Ghana & Africa',
+    title: 'Oppora — Opportunities, Housing & Community Across Ghana',
     description:
-      'Trusted community platform connecting people across Ghana and Africa with verified opportunities, housing, free item exchange, and mutual help.',
+      'Trusted community platform connecting people across all 16 regions of Ghana with verified opportunities, housing, free item exchange, and mutual help.',
   },
   robots: {
     index: true,

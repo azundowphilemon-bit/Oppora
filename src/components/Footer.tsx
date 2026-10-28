@@ -168,15 +168,15 @@ export function Footer() {
               <li>Kumasi &amp; Ashanti Region</li>
               <li>North East (Nalerigu, Walewale &amp; Kpasenkpe)</li>
               <li>Tamale, Bolgatanga, Wa &amp; Damongo</li>
-              <li>Takoradi, Cape Coast, Ho &amp; Sunyani</li>
-              <li>Lagos, Nairobi, Kigali &amp; Pan-African</li>
+              <li>Takoradi, Cape Coast, Ho &amp; Koforidua</li>
+              <li>Sunyani, Techiman, Goaso &amp; All 16 Regions</li>
             </ul>
           </div>
         </div>
 
         <div className="mt-10 pt-6 border-t border-charcoal-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ivory-300">
           <p>
-            &copy; {new Date().getFullYear()} Oppora Community Platform (Ghana &amp; Africa). Built for
+            &copy; {new Date().getFullYear()} Oppora Community Platform (Ghana). Built for
             accessibility, speed, and community trust.
           </p>
           <p className="flex items-center gap-1.5">
