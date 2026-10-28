@@ -247,6 +247,44 @@ export async function updateListingRecord(
   id: string,
   updates: Partial<Listing>
 ): Promise<Listing | null> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const existing = await getListingById(id);
+      if (existing) {
+        const merged: Listing = {
+          ...existing,
+          ...updates,
+          id,
+          updatedAt: new Date().toISOString(),
+        };
+        const { data, error } = await supabase
+          .from('listings')
+          .update({
+            title: merged.title,
+            summary: merged.summary,
+            description: merged.description,
+            category: merged.category,
+            region: merged.region,
+            city: merged.city,
+            status: merged.status,
+            is_featured: merged.isFeatured,
+            expires_at: merged.expiresAt,
+            contact_phone: merged.contactPhone || null,
+            images: merged.images,
+            updated_at: merged.updatedAt,
+          })
+          .eq('id', id)
+          .select('*')
+          .single();
+
+        if (!error && data) {
+          return mapSupabaseRowToListing(data as Record<string, unknown>);
+        }
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   const index = store.listings.findIndex((item) => item.id === id);
   if (index === -1) return null;
@@ -261,29 +299,6 @@ export async function updateListingRecord(
   store.listings[index] = updated;
   saveLocalStore(store);
 
-  if (isSupabaseConfigured) {
-    const supabase = getSupabaseServerClient(true);
-    if (supabase) {
-      await supabase
-        .from('listings')
-        .update({
-          title: updated.title,
-          summary: updated.summary,
-          description: updated.description,
-          category: updated.category,
-          region: updated.region,
-          city: updated.city,
-          status: updated.status,
-          is_featured: updated.isFeatured,
-          expires_at: updated.expiresAt,
-          contact_phone: updated.contactPhone || null,
-          images: updated.images,
-          updated_at: updated.updatedAt,
-        })
-        .eq('id', id);
-    }
-  }
-
   return {
     ...updated,
     status: getEffectiveListingStatus(updated),
@@ -294,7 +309,8 @@ export async function deleteListingRecord(id: string): Promise<boolean> {
   if (isSupabaseConfigured) {
     const supabase = getSupabaseServerClient(true);
     if (supabase) {
-      await supabase.from('listings').delete().eq('id', id);
+      const { error } = await supabase.from('listings').delete().eq('id', id);
+      if (!error) return true;
     }
   }
 
@@ -309,6 +325,27 @@ export async function deleteListingRecord(id: string): Promise<boolean> {
 }
 
 export async function getCategories(section?: SectionType): Promise<CategoryItem[]> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      let query = supabase.from('categories').select('*').order('created_at', { ascending: true });
+      if (section) {
+        query = query.eq('section', section).eq('is_active', true);
+      }
+      const { data, error } = await query;
+      if (!error && data && data.length > 0) {
+        return data.map((row: Record<string, unknown>) => ({
+          id: String(row.id),
+          section: row.section as SectionType,
+          name: String(row.name),
+          slug: String(row.slug),
+          description: String(row.description || ''),
+          isActive: Boolean(row.is_active),
+        }));
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   if (section) {
     return store.categories.filter((c) => c.section === section && c.isActive);
@@ -317,6 +354,20 @@ export async function getCategories(section?: SectionType): Promise<CategoryItem
 }
 
 export async function addCategoryRecord(category: CategoryItem): Promise<CategoryItem> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      await supabase.from('categories').insert({
+        id: category.id,
+        section: category.section,
+        name: category.name,
+        slug: category.slug,
+        description: category.description,
+        is_active: category.isActive,
+      });
+    }
+  }
+
   const store = ensureLocalStore();
   store.categories.push(category);
   saveLocalStore(store);
@@ -324,6 +375,36 @@ export async function addCategoryRecord(category: CategoryItem): Promise<Categor
 }
 
 export async function toggleCategoryRecord(id: string): Promise<CategoryItem | null> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const { data: existing } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (existing) {
+        const nextActive = !Boolean(existing.is_active);
+        const { data: updated } = await supabase
+          .from('categories')
+          .update({ is_active: nextActive })
+          .eq('id', id)
+          .select('*')
+          .single();
+        if (updated) {
+          return {
+            id: String(updated.id),
+            section: updated.section as SectionType,
+            name: String(updated.name),
+            slug: String(updated.slug),
+            description: String(updated.description || ''),
+            isActive: Boolean(updated.is_active),
+          };
+        }
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   const found = store.categories.find((c) => c.id === id);
   if (!found) return null;
@@ -333,6 +414,30 @@ export async function toggleCategoryRecord(id: string): Promise<CategoryItem | n
 }
 
 export async function getSafetyReports(): Promise<SafetyReport[]> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('reports')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        return data.map((row: Record<string, unknown>) => ({
+          id: String(row.id),
+          listingId: String(row.listing_id),
+          listingTitle: String(row.listing_title),
+          listingSection: row.listing_section as SectionType,
+          reason: row.reason as SafetyReport['reason'],
+          details: String(row.details),
+          reporterContact: row.reporter_contact ? String(row.reporter_contact) : undefined,
+          status: row.status as SafetyReport['status'],
+          adminNotes: row.admin_notes ? String(row.admin_notes) : undefined,
+          createdAt: String(row.created_at),
+        }));
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   return store.reports.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -367,6 +472,36 @@ export async function updateSafetyReportStatus(
   status: SafetyReport['status'],
   adminNotes?: string
 ): Promise<SafetyReport | null> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const updatePayload: Record<string, unknown> = { status };
+      if (adminNotes !== undefined) {
+        updatePayload.admin_notes = adminNotes;
+      }
+      const { data } = await supabase
+        .from('reports')
+        .update(updatePayload)
+        .eq('id', id)
+        .select('*')
+        .single();
+      if (data) {
+        return {
+          id: String(data.id),
+          listingId: String(data.listing_id),
+          listingTitle: String(data.listing_title),
+          listingSection: data.listing_section as SectionType,
+          reason: data.reason as SafetyReport['reason'],
+          details: String(data.details),
+          reporterContact: data.reporter_contact ? String(data.reporter_contact) : undefined,
+          status: data.status as SafetyReport['status'],
+          adminNotes: data.admin_notes ? String(data.admin_notes) : undefined,
+          createdAt: String(data.created_at),
+        };
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   const report = store.reports.find((r) => r.id === id);
   if (!report) return null;
@@ -379,6 +514,27 @@ export async function updateSafetyReportStatus(
 }
 
 export async function getAdminMessages(): Promise<AdminMessage[]> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('admin_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        return data.map((row: Record<string, unknown>) => ({
+          id: String(row.id),
+          senderName: String(row.sender_name),
+          senderContact: String(row.sender_contact),
+          subject: String(row.subject),
+          message: String(row.message),
+          status: row.status as AdminMessage['status'],
+          createdAt: String(row.created_at),
+        }));
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   return store.adminMessages.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -407,6 +563,29 @@ export async function createAdminMessage(msg: AdminMessage): Promise<AdminMessag
 }
 
 export async function markAdminMessageReviewed(id: string): Promise<AdminMessage | null> {
+  if (isSupabaseConfigured) {
+    const supabase = getSupabaseServerClient(true);
+    if (supabase) {
+      const { data } = await supabase
+        .from('admin_messages')
+        .update({ status: 'reviewed' })
+        .eq('id', id)
+        .select('*')
+        .single();
+      if (data) {
+        return {
+          id: String(data.id),
+          senderName: String(data.sender_name),
+          senderContact: String(data.sender_contact),
+          subject: String(data.subject),
+          message: String(data.message),
+          status: data.status as AdminMessage['status'],
+          createdAt: String(data.created_at),
+        };
+      }
+    }
+  }
+
   const store = ensureLocalStore();
   const msg = store.adminMessages.find((m) => m.id === id);
   if (!msg) return null;

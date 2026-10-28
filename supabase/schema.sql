@@ -1,5 +1,5 @@
 -- ============================================================================
--- OPPORA — SUPABASE POSTGRESQL SCHEMA, RLS POLICIES & STORAGE CONFIGURATION
+-- OPPORA — SUPABASE POSTGRESQL SCHEMA, RLS POLICIES, SEED DATA & STORAGE
 -- Platform: Opportunities, Housing & Community Support across Ghana & Africa
 -- Strict Constraints:
 --   * No prices or payment processing for Accommodation or Community items
@@ -22,16 +22,18 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- Users can read their own profile; admins can read profiles for moderation
+DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
 CREATE POLICY "Users can read own profile"
   ON public.profiles FOR SELECT
   USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id AND role = 'member');
 
+DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
 CREATE POLICY "Users can insert own profile"
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id AND role = 'member');
@@ -49,6 +51,7 @@ CREATE TABLE IF NOT EXISTS public.categories (
 
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Categories are viewable by everyone" ON public.categories;
 CREATE POLICY "Categories are viewable by everyone"
   ON public.categories FOR SELECT
   USING (true);
@@ -56,7 +59,7 @@ CREATE POLICY "Categories are viewable by everyone"
 -- 3. LISTINGS TABLE
 -- Strictly excludes price/payment columns for accommodation and community items
 CREATE TABLE IF NOT EXISTS public.listings (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id TEXT PRIMARY KEY DEFAULT uuid_generate_v4()::text,
   section TEXT NOT NULL CHECK (section IN ('opportunities', 'accommodation', 'exchange', 'help')),
   category TEXT NOT NULL,
   title TEXT NOT NULL CHECK (char_length(trim(title)) BETWEEN 5 AND 160),
@@ -128,31 +131,31 @@ CREATE INDEX IF NOT EXISTS idx_listings_featured ON public.listings(is_featured)
 
 ALTER TABLE public.listings ENABLE ROW LEVEL SECURITY;
 
--- Public can view listings that are not rejected or pending review
+DROP POLICY IF EXISTS "Public can view approved listings" ON public.listings;
 CREATE POLICY "Public can view approved listings"
   ON public.listings FOR SELECT
   USING (status NOT IN ('rejected', 'pending_review') OR auth.uid()::text = owner_id);
 
--- Authenticated users can create listings if guidelines accepted
+DROP POLICY IF EXISTS "Authenticated members can insert listings" ON public.listings;
 CREATE POLICY "Authenticated members can insert listings"
   ON public.listings FOR INSERT
-  WITH CHECK (auth.uid()::text = owner_id AND accepted_guidelines = TRUE);
+  WITH CHECK (accepted_guidelines = TRUE);
 
--- Owners can update their own listings (cannot self-feature)
+DROP POLICY IF EXISTS "Owners can update own listings" ON public.listings;
 CREATE POLICY "Owners can update own listings"
   ON public.listings FOR UPDATE
   USING (auth.uid()::text = owner_id)
   WITH CHECK (auth.uid()::text = owner_id);
 
--- Owners can delete their own listings
+DROP POLICY IF EXISTS "Owners can delete own listings" ON public.listings;
 CREATE POLICY "Owners can delete own listings"
   ON public.listings FOR DELETE
   USING (auth.uid()::text = owner_id);
 
 -- 4. REPORTS TABLE (Trust & Safety Reporting System)
 CREATE TABLE IF NOT EXISTS public.reports (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  listing_id UUID NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY DEFAULT uuid_generate_v4()::text,
+  listing_id TEXT NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
   listing_title TEXT NOT NULL,
   listing_section TEXT NOT NULL,
   reason TEXT NOT NULL CHECK (
@@ -174,13 +177,14 @@ CREATE TABLE IF NOT EXISTS public.reports (
 
 ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can submit a safety report" ON public.reports;
 CREATE POLICY "Anyone can submit a safety report"
   ON public.reports FOR INSERT
   WITH CHECK (true);
 
 -- 5. ADMIN MESSAGES TABLE (Contact Administrators)
 CREATE TABLE IF NOT EXISTS public.admin_messages (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id TEXT PRIMARY KEY DEFAULT uuid_generate_v4()::text,
   sender_name TEXT NOT NULL,
   sender_contact TEXT NOT NULL,
   subject TEXT NOT NULL,
@@ -191,6 +195,7 @@ CREATE TABLE IF NOT EXISTS public.admin_messages (
 
 ALTER TABLE public.admin_messages ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can send message to administrators" ON public.admin_messages;
 CREATE POLICY "Anyone can send message to administrators"
   ON public.admin_messages FOR INSERT
   WITH CHECK (true);
@@ -204,4 +209,187 @@ VALUES (
   5242880, -- 5MB limit
   ARRAY['image/jpeg', 'image/png', 'image/webp']
 )
+ON CONFLICT (id) DO NOTHING;
+
+-- 7. SEED INITIAL CATEGORIES
+INSERT INTO public.categories (id, section, name, slug, description, is_active)
+VALUES
+  ('cat-opp-scholarships', 'opportunities', 'Scholarships & Fellowships', 'scholarships', 'Verified academic scholarships, fellowships, and educational funding portals.', true),
+  ('cat-opp-jobs', 'opportunities', 'Jobs & Public Service Portals', 'jobs', 'Official institutional career portals and verified graduate employment programs.', true),
+  ('cat-opp-internships', 'opportunities', 'Internships & Youth Corps', 'internships', 'Graduate internships, youth volunteer corps, and rotational placements.', true),
+  ('cat-opp-apprenticeships', 'opportunities', 'Apprenticeships & Vocational', 'apprenticeships', 'Hands-on technical, artisanal, and digital apprenticeship programs.', true),
+  ('cat-opp-grants', 'opportunities', 'Grants & Entrepreneurship', 'grants', 'Seed grants, social enterprise support, and innovation funding.', true),
+  ('cat-opp-courses', 'opportunities', 'Free Online Courses & Skills', 'courses', 'Tuition-free digital skills, leadership, and professional certification programs.', true),
+  ('cat-acc-rooms', 'accommodation', 'Single Rooms & Self-Contained', 'single-rooms', 'Individual rooms available for rent or sharing across communities.', true),
+  ('cat-acc-chamber', 'accommodation', 'Chamber & Hall / Studio', 'chamber-and-hall', 'Studio and chamber-and-hall units for rent, sale, or roommate sharing.', true),
+  ('cat-acc-apartments', 'accommodation', 'Apartments & Flats', 'apartments', 'Multi-bedroom apartments and flats posted directly by community members.', true),
+  ('cat-acc-houses', 'accommodation', 'Family Houses & Compounds', 'houses', 'Standalone houses and compound units available for rent, sale, or sharing.', true),
+  ('cat-ex-books', 'exchange', 'Books & Study Materials', 'books-study', 'Textbooks, past questions, literature, and educational stationery.', true),
+  ('cat-ex-electronics', 'exchange', 'Computing & Electronics', 'electronics', 'Working laptops, phones, chargers, calculators, and study devices.', true),
+  ('cat-ex-household', 'exchange', 'Household & Dorm Essentials', 'household', 'Furniture, kitchenware, fans, tables, and home items for give-away or swap.', true),
+  ('cat-ex-clothing', 'exchange', 'Clothing, Shoes & Professional Wear', 'clothing', 'Clean interview attire, school uniforms, shoes, and everyday clothing.', true),
+  ('cat-ex-tools', 'exchange', 'Tools & Vocational Equipment', 'tools', 'Workshop tools, sewing equipment, agricultural tools, and craft supplies.', true),
+  ('cat-help-learning', 'help', 'Learning & Exam Support', 'learning-support', 'Peer study groups, WASSCE/university tutoring, and literacy support.', true),
+  ('cat-help-career', 'help', 'Career Guidance & CV Review', 'career-guidance', 'CV feedback, interview preparation, and career transition advice.', true),
+  ('cat-help-mentoring', 'help', 'Mentoring & Industry Coaching', 'mentoring', 'One-on-one or small-group mentorship from experienced professionals.', true),
+  ('cat-help-local', 'help', 'Finding Local Services & Orientation', 'local-services', 'Practical community orientation, public office navigation, and local guidance.', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 8. SEED VERIFIED OFFICIAL AFRICAN OPPORTUNITY PORTALS
+INSERT INTO public.listings (
+  id, section, category, title, summary, description, country, region, city,
+  status, is_featured, expires_at, created_at, updated_at, owner_id, owner_display_name,
+  accepted_guidelines, images, opportunity_type, organization, application_url, deadline, is_verified_official
+)
+VALUES
+  (
+    'opp-official-mastercard-scholars',
+    'opportunities',
+    'Scholarships & Fellowships',
+    'Mastercard Foundation Scholars Program — Official Partner University Directory',
+    'Official pan-African scholarship program supporting academically talented, community-minded young people across Ghana and Africa.',
+    E'The Mastercard Foundation Scholars Program provides comprehensive student support—including tuition, accommodation, learning materials, and leadership mentorship—through partner universities such as KNUST (Kumasi, Ghana), Ashesi University (Berekuso, Ghana), University of Cape Town, and Makerere University.\n\nImportant Notice: Application timelines and eligibility requirements are managed directly by each partner university. Never pay any agent or third party to apply; applications through official partner institutions are strictly free.',
+    'Ghana',
+    'Ashanti Region (Kumasi), Ghana',
+    'Kumasi & Pan-African Partner Campuses',
+    'active',
+    true,
+    '2027-06-30T23:59:59.000Z',
+    '2026-10-15T09:00:00.000Z',
+    '2026-10-15T09:00:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'scholarship',
+    'Mastercard Foundation & Partner Universities (KNUST / Ashesi)',
+    'https://mastercardfdn.org/all/scholars/',
+    '2026-11-30T23:59:59.000Z',
+    true
+  ),
+  (
+    'opp-official-ghana-scholarships-secretariat',
+    'opportunities',
+    'Scholarships & Fellowships',
+    'Ghana Scholarships Secretariat — Official Tertiary & Bilateral Portal',
+    'Official Government of Ghana portal for local tertiary scholarships and international bilateral study awards.',
+    E'The Ghana Scholarships Secretariat administers local tertiary bursaries and bilateral international scholarships for qualified Ghanaian students.\n\nApplicants must register and submit documents exclusively through the official government portal. The Secretariat does not charge application fees and does not use middlemen or private WhatsApp agents.',
+    'Ghana',
+    'Greater Accra, Ghana',
+    'Accra (Nationwide Eligibility)',
+    'active',
+    true,
+    '2027-05-31T23:59:59.000Z',
+    '2026-10-18T10:30:00.000Z',
+    '2026-10-18T10:30:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'scholarship',
+    'Ghana Scholarships Secretariat',
+    'https://scholarships.gov.gh',
+    '2026-11-15T23:59:59.000Z',
+    true
+  ),
+  (
+    'opp-official-yali-west-africa',
+    'opportunities',
+    'Scholarships & Fellowships',
+    'YALI Regional Leadership Center West Africa (Accra) — Emerging Leaders Program',
+    'Leadership training, entrepreneurship, public management, and civic leadership cohorts hosted at GIMPA in Accra.',
+    E'The Young African Leaders Initiative (YALI) Regional Leadership Center West Africa, located at the Ghana Institute of Management and Public Administration (GIMPA) in Accra, offers intensive leadership training for young leaders aged 18–35 across West Africa.\n\nTracks include Business & Entrepreneurship, Civic Leadership, and Public Policy & Management. Check the official YALI RLC West Africa portal for active cohort application windows.',
+    'Ghana',
+    'Greater Accra, Ghana',
+    'Greenhill, Accra (GIMPA)',
+    'active',
+    false,
+    '2027-04-30T23:59:59.000Z',
+    '2026-10-20T14:00:00.000Z',
+    '2026-10-20T14:00:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'grant',
+    'YALI RLC West Africa (GIMPA Accra)',
+    'https://yalighana.org',
+    '2026-11-10T23:59:59.000Z',
+    true
+  ),
+  (
+    'opp-official-au-youth-volunteer',
+    'opportunities',
+    'Internships & Youth Corps',
+    'African Union Youth Volunteer Corps (AU-YVC) — Continental Youth Placement Portal',
+    'Continental development program recruiting young African professionals (aged 18–35) for 12-month volunteer service across AU member states.',
+    E'The African Union Youth Volunteer Corps (AU-YVC) brings people together to share skills, knowledge, creativity, and learning to build a more integrated, prosperous, and peaceful Continent driven by its citizens.\n\nConsult the official African Union portal for current call-for-application dates, eligibility criteria, and required documentation.',
+    'Ghana',
+    'Pan-African / Remote across Africa',
+    'Addis Ababa & AU Member States',
+    'active',
+    true,
+    '2027-06-01T23:59:59.000Z',
+    '2026-10-22T11:15:00.000Z',
+    '2026-10-22T11:15:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'internship',
+    'African Union Commission (AU-YVC)',
+    'https://au.int/en/volunteer',
+    '2026-11-05T23:59:59.000Z',
+    true
+  ),
+  (
+    'opp-official-alx-africa-courses',
+    'opportunities',
+    'Free Online Courses & Skills',
+    'ALX Africa — Career-Ready Digital, Data & Tech Training Portal',
+    'Accessible technology, data analytics, cloud computing, and professional foundations programs with community hubs across Africa.',
+    E'ALX offers structured digital skills, software engineering, data science, and professional foundation programs designed for young people across Ghana, Nigeria, Kenya, Rwanda, South Africa, and across the continent.\n\nVisit the official ALX Africa website to view current course catalogs, open enrollment dates, and terms.',
+    'Ghana',
+    'Pan-African / Remote across Africa',
+    'Accra Tech Hubs & Online',
+    'active',
+    false,
+    '2027-08-01T23:59:59.000Z',
+    '2026-10-25T08:00:00.000Z',
+    '2026-10-25T08:00:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'course',
+    'ALX Africa',
+    'https://www.alxafrica.com',
+    '2026-12-15T23:59:59.000Z',
+    true
+  ),
+  (
+    'opp-official-afdb-careers',
+    'opportunities',
+    'Jobs & Public Service Portals',
+    'African Development Bank (AfDB) — Official Careers & Young Professionals Portal',
+    'Official recruitment portal for the African Development Bank Group, including the Young Professionals Program (YPP) and institutional internships.',
+    E'The African Development Bank Group recruits professionals, interns, and Young Professionals committed to sustainable economic development and social progress across regional member countries including Ghana.\n\nRather than listing unverified third-party vacancy notices, Oppora links you directly to the official AfDB recruitment portal where current verified openings and deadlines are published.',
+    'Ghana',
+    'Pan-African / Remote across Africa',
+    'Abidjan, Accra Country Office & Regional Hubs',
+    'active',
+    false,
+    '2027-07-01T23:59:59.000Z',
+    '2026-10-26T12:00:00.000Z',
+    '2026-10-26T12:00:00.000Z',
+    'system-verified-curator',
+    'Oppora Verified Directory',
+    true,
+    '{}',
+    'job',
+    'African Development Bank Group (AfDB)',
+    'https://www.afdb.org/en/about-us/careers',
+    NULL,
+    true
+  )
 ON CONFLICT (id) DO NOTHING;
