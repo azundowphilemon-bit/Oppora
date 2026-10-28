@@ -212,7 +212,7 @@ export function SectionBrowser({
       <div className="bg-white rounded-2xl border border-ivory-200 p-4 sm:p-5 shadow-warm-sm space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
           {/* Keyword Search */}
-          <div className="md:col-span-5 relative">
+          <div className="md:col-span-5 min-w-0 relative">
             <Search className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3.5" />
             <input
               type="search"
@@ -220,18 +220,18 @@ export function SectionBrowser({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, city, skill, or organization..."
               aria-label="Search listings"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
+              className="w-full min-w-0 pl-10 pr-4 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
             />
           </div>
 
           {/* Category Filter */}
-          <div className="md:col-span-3 relative">
+          <div className="md:col-span-3 min-w-0 relative">
             <Filter className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3.5" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               aria-label="Filter by category"
-              className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
+              className="w-full min-w-0 pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => (
@@ -243,7 +243,7 @@ export function SectionBrowser({
           </div>
 
           {/* Region Filter */}
-          <div className="md:col-span-4 relative">
+          <div className="md:col-span-4 min-w-0 relative">
             <MapPin className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3.5" />
             <select
               value={selectedRegion}
@@ -252,7 +252,7 @@ export function SectionBrowser({
                 setSelectedTown('all');
               }}
               aria-label="Filter by region"
-              className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
+              className="w-full min-w-0 pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
             >
               <option value="all">All Regions (Ghana)</option>
               {GHANA_AND_AFRICA_REGIONS.map((reg) => (

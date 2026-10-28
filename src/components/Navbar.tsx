@@ -101,8 +101,8 @@ export function Navbar() {
       </a>
 
       {/* Top Community Trust & Zero-Payment Notice Bar */}
-      <div className="bg-charcoal-900 text-ivory-100 text-xs border-b border-charcoal-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div className="bg-charcoal-900 text-ivory-100 text-xs border-b border-charcoal-800 w-full">
+        <div className="w-full max-w-full px-3 sm:px-6 lg:px-10 py-2 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-forest-700 text-gold-200 font-semibold text-[11px]">
               <ShieldCheck className="w-3.5 h-3.5" /> 100% Free Community Platform
@@ -135,8 +135,8 @@ export function Navbar() {
       </div>
 
       {/* Main Sticky Header */}
-      <header className="sticky top-0 z-40 bg-ivory-50/95 backdrop-blur-md border-b border-ivory-200 shadow-warm-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 w-full bg-ivory-50/95 backdrop-blur-md border-b border-ivory-200 shadow-warm-sm">
+        <div className="w-full max-w-full px-3 sm:px-6 lg:px-10 h-16 sm:h-20 flex items-center justify-between gap-3">
           <Link href="/" aria-label="Oppora Home">
             <OpporaLogo size="md" />
           </Link>

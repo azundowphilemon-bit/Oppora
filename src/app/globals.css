@@ -9,10 +9,14 @@
 }
 
 @layer base {
-  html {
+  html,
+  body {
     scroll-behavior: smooth;
     background-color: #fdfbf7;
     color: #171512;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 
   body {

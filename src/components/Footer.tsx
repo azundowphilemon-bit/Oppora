@@ -21,7 +21,7 @@ export function Footer() {
 
       {/* Mandatory Trust, Safety & Third-Party Disclaimer Banner */}
       <div className="bg-charcoal-800/80 border-b border-charcoal-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="w-full max-w-full px-3 sm:px-6 lg:px-10 py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="flex items-start gap-3.5">
             <div className="p-2.5 rounded-xl bg-clay-600/20 text-gold-400 shrink-0">
               <ShieldAlert className="w-5 h-5" />
@@ -71,12 +71,12 @@ export function Footer() {
       </div>
 
       {/* Main Footer Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full max-w-full px-3 sm:px-6 lg:px-10 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           <div className="lg:col-span-2 space-y-4">
             <OpporaLogo size="md" lightText />
             <p className="text-sm text-ivory-200 max-w-md leading-relaxed">
-              Connecting people across Ghana and Africa with verified educational and career
+              Connecting communities across all 16 regions of Ghana with verified educational and career
               opportunities, community-shared housing, free item exchange, and practical mutual support.
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-1">

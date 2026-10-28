@@ -66,12 +66,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-ivory-50 text-charcoal-900">
+      <body className="min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col bg-ivory-50 text-charcoal-900">
         <OpporaProvider>
           <Navbar />
           <main
             id="main-content"
-            className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
+            className="flex-1 w-full max-w-full px-3 sm:px-6 lg:px-10 py-6 sm:py-8"
           >
             {children}
           </main>

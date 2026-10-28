@@ -128,7 +128,7 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
               onSubmit={handleHeroSearch}
               className="bg-ivory-50 p-2.5 sm:p-3 rounded-2xl shadow-warm-lg grid grid-cols-1 md:grid-cols-12 gap-2.5 text-charcoal-900"
             >
-              <div className="md:col-span-5 relative flex items-center">
+              <div className="md:col-span-5 min-w-0 relative flex items-center">
                 <Search className="w-4 h-4 text-charcoal-500 absolute left-3.5" />
                 <input
                   type="search"
@@ -136,16 +136,16 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
                   onChange={(e) => setHeroSearch(e.target.value)}
                   placeholder="Search scholarships, rooms, textbooks, mentoring..."
                   aria-label="Search across all Oppora sections"
-                  className="w-full pl-10 pr-3 py-3 rounded-xl bg-white border border-ivory-200 text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
+                  className="w-full min-w-0 pl-10 pr-3 py-3 rounded-xl bg-white border border-ivory-200 text-sm text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
                 />
               </div>
 
-              <div className="md:col-span-3">
+              <div className="md:col-span-3 min-w-0">
                 <select
                   value={heroSection}
                   onChange={(e) => setHeroSection(e.target.value)}
                   aria-label="Select section"
-                  className="w-full px-3 py-3 rounded-xl bg-white border border-ivory-200 text-xs sm:text-sm font-semibold text-charcoal-800 focus:outline-none focus:ring-2 focus:ring-clay-500"
+                  className="w-full min-w-0 px-3 py-3 rounded-xl bg-white border border-ivory-200 text-xs sm:text-sm font-semibold text-charcoal-800 focus:outline-none focus:ring-2 focus:ring-clay-500"
                 >
                   <option value="all">All Sections</option>
                   <option value="opportunities">Opportunities</option>
@@ -155,13 +155,13 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
                 </select>
               </div>
 
-              <div className="md:col-span-2 relative flex items-center">
+              <div className="md:col-span-2 min-w-0 relative flex items-center">
                 <MapPin className="w-4 h-4 text-clay-600 absolute left-3 pointer-events-none" />
                 <select
                   value={heroRegion}
                   onChange={(e) => setHeroRegion(e.target.value)}
                   aria-label="Select region"
-                  className="w-full pl-8 pr-2 py-3 rounded-xl bg-white border border-ivory-200 text-xs font-semibold text-charcoal-800 truncate focus:outline-none focus:ring-2 focus:ring-clay-500"
+                  className="w-full min-w-0 pl-8 pr-2 py-3 rounded-xl bg-white border border-ivory-200 text-xs font-semibold text-charcoal-800 truncate focus:outline-none focus:ring-2 focus:ring-clay-500"
                 >
                   <option value="all">All Regions</option>
                   {GHANA_AND_AFRICA_REGIONS.map((reg) => (
