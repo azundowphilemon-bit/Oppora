@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllListings } from '@/lib/repository';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oppora-pi.vercel.app';
   const listings = await getAllListings();
 
   const staticRoutes: MetadataRoute.Sitemap = [

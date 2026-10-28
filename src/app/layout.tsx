@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { GlobalModals } from '@/components/GlobalModals';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oppora-pi.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
