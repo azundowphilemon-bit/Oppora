@@ -13,7 +13,6 @@ import {
   ArrowRight,
   Award,
   Clock,
-  Sparkles,
   ShieldCheck,
   PlusCircle,
   CheckCircle2,
@@ -106,7 +105,7 @@ export function HomeClient({ initialListings }: { initialListings: Listing[] }) 
         <div className="relative z-10 px-6 py-12 sm:px-12 sm:py-16 lg:py-20">
           <div className="max-w-3xl space-y-6">
             <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-gold-400/30 text-gold-200 text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-gold-400" />
               <span>Built for Ghana &bull; All 16 Regions &bull; Opportunities, Housing &amp; Community</span>
             </div>
 

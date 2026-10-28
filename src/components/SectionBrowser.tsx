@@ -6,7 +6,6 @@ import {
   MapPin,
   Filter,
   PlusCircle,
-  Sparkles,
   Clock,
   ShieldCheck,
   Loader2,
@@ -173,7 +172,7 @@ export function SectionBrowser({
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="max-w-2xl space-y-2.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-500/20 border border-gold-400/30 text-gold-200 text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5" />
               {accentLabel}
             </span>
             <h1 className="text-2xl sm:text-4xl font-display font-bold tracking-tight text-ivory-50">
@@ -459,7 +458,7 @@ export function SectionBrowser({
       ) : (
         <div className="bg-white rounded-3xl border border-ivory-200 p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-warm-sm space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-ivory-100 border border-ivory-200 flex items-center justify-center mx-auto text-clay-600">
-            <Sparkles className="w-7 h-7" />
+            <Search className="w-7 h-7" />
           </div>
           <h2 className="text-xl font-display font-bold text-charcoal-900">
             {emptyStateTitle}

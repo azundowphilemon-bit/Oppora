@@ -7,7 +7,6 @@ import {
   MapPin,
   Filter,
   RotateCcw,
-  Sparkles,
   Loader2,
 } from 'lucide-react';
 import {
@@ -251,7 +250,7 @@ function GlobalSearchContent() {
         </div>
       ) : (
         <div className="bg-white rounded-3xl border border-ivory-200 p-10 text-center max-w-xl mx-auto space-y-3">
-          <Sparkles className="w-8 h-8 text-clay-600 mx-auto" />
+          <Search className="w-8 h-8 text-clay-600 mx-auto" />
           <h2 className="text-lg font-display font-bold text-charcoal-900">
             No listings matched your search criteria
           </h2>
