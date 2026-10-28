@@ -22,6 +22,7 @@ import {
   HelpMode,
   ItemCondition,
   OpportunityType,
+  REGION_TOWNS,
   REPORT_REASONS,
   ReportReason,
   SectionType,
@@ -709,17 +710,50 @@ export function GlobalModals() {
                       htmlFor="listing-city"
                       className="block text-xs font-semibold text-charcoal-800 mb-1"
                     >
-                      City / Neighborhood *
+                      City / Town / Neighborhood *
                     </label>
                     <input
                       id="listing-city"
                       type="text"
+                      list="listing-region-towns"
                       required
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      placeholder="e.g., East Legon, Accra or Ayeduase, Kumasi"
+                      placeholder={
+                        REGION_TOWNS[region]?.length
+                          ? `e.g., ${REGION_TOWNS[region].slice(0, 3).join(', ')}`
+                          : 'e.g., Nalerigu, Walewale, East Legon'
+                      }
                       className="w-full px-3 py-2 rounded-xl border border-ivory-300 bg-white text-xs text-charcoal-900"
                     />
+                    {REGION_TOWNS[region]?.length ? (
+                      <>
+                        <datalist id="listing-region-towns">
+                          {REGION_TOWNS[region].map((town) => (
+                            <option key={town} value={town} />
+                          ))}
+                        </datalist>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                          <span className="text-[10px] text-charcoal-500 font-medium">
+                            Towns:
+                          </span>
+                          {REGION_TOWNS[region].slice(0, 5).map((town) => (
+                            <button
+                              key={town}
+                              type="button"
+                              onClick={() => setCity(town)}
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition-colors ${
+                                city === town
+                                  ? 'bg-clay-600 text-white'
+                                  : 'bg-ivory-200 hover:bg-ivory-300 text-charcoal-700'
+                              }`}
+                            >
+                              {town}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                   <div>
                     <label

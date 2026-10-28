@@ -14,6 +14,7 @@ import {
   CategoryItem,
   GHANA_AND_AFRICA_REGIONS,
   Listing,
+  REGION_TOWNS,
 } from '@/lib/types';
 import { ListingCard } from '@/components/ListingCard';
 import { useOppora } from '@/components/OpporaProvider';
@@ -30,6 +31,7 @@ function GlobalSearchContent() {
   const [section, setSection] = useState(searchParams.get('section') || 'all');
   const [category, setCategory] = useState('all');
   const [region, setRegion] = useState(searchParams.get('region') || 'all');
+  const [town, setTown] = useState('all');
   const [statusFilter, setStatusFilter] = useState('active');
 
   useEffect(() => {
@@ -52,6 +54,7 @@ function GlobalSearchContent() {
       if (section !== 'all' && item.section !== section) return false;
       if (category !== 'all' && item.category !== category) return false;
       if (region !== 'all' && item.region !== region) return false;
+      if (town !== 'all' && !item.city.toLowerCase().includes(town.toLowerCase())) return false;
       if (statusFilter !== 'all' && item.status !== statusFilter) return false;
 
       const q = query.trim().toLowerCase();
@@ -68,7 +71,7 @@ function GlobalSearchContent() {
       }
       return true;
     });
-  }, [listings, blockedListingIds, section, category, region, statusFilter, query]);
+  }, [listings, blockedListingIds, section, category, region, town, statusFilter, query]);
 
   const visibleCategories = useMemo(() => {
     if (section === 'all') return categories;
@@ -143,7 +146,10 @@ function GlobalSearchContent() {
             <MapPin className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3.5" />
             <select
               value={region}
-              onChange={(e) => setRegion(e.target.value)}
+              onChange={(e) => {
+                setRegion(e.target.value);
+                setTown('all');
+              }}
               aria-label="Filter by region"
               className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900"
             >
@@ -156,6 +162,39 @@ function GlobalSearchContent() {
             </select>
           </div>
         </div>
+
+        {region !== 'all' && REGION_TOWNS[region]?.length ? (
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-ivory-100">
+            <span className="text-xs font-semibold text-charcoal-600 mr-1">
+              Towns in {region.split(',')[0]}:
+            </span>
+            <button
+              type="button"
+              onClick={() => setTown('all')}
+              className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${
+                town === 'all'
+                  ? 'bg-forest-700 text-white'
+                  : 'bg-ivory-100 hover:bg-ivory-200 text-charcoal-700'
+              }`}
+            >
+              All Towns
+            </button>
+            {REGION_TOWNS[region].map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTown(t)}
+                className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${
+                  town === t
+                    ? 'bg-forest-700 text-white'
+                    : 'bg-ivory-100 hover:bg-ivory-200 text-charcoal-700'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-ivory-100 text-xs">
           <div className="flex flex-wrap items-center gap-1.5">

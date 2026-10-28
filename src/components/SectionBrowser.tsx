@@ -17,6 +17,7 @@ import {
   CategoryItem,
   GHANA_AND_AFRICA_REGIONS,
   Listing,
+  REGION_TOWNS,
   SectionType,
 } from '@/lib/types';
 import { getDaysRemaining, getEffectiveListingStatus } from '@/lib/validation';
@@ -62,6 +63,7 @@ export function SectionBrowser({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
+  const [selectedTown, setSelectedTown] = useState('all');
   const [selectedSubMode, setSelectedSubMode] = useState('all');
   const [viewMode, setViewMode] = useState<'all' | 'featured' | 'closing_soon' | 'recent'>('all');
 
@@ -104,6 +106,13 @@ export function SectionBrowser({
         return false;
       }
 
+      if (
+        selectedTown !== 'all' &&
+        !item.city.toLowerCase().includes(selectedTown.toLowerCase())
+      ) {
+        return false;
+      }
+
       if (selectedSubMode !== 'all') {
         if (section === 'opportunities' && item.opportunityType !== selectedSubMode) {
           return false;
@@ -142,6 +151,7 @@ export function SectionBrowser({
     searchQuery,
     selectedCategory,
     selectedRegion,
+    selectedTown,
     selectedSubMode,
     viewMode,
     section,
@@ -151,6 +161,7 @@ export function SectionBrowser({
     setSearchQuery('');
     setSelectedCategory('all');
     setSelectedRegion('all');
+    setSelectedTown('all');
     setSelectedSubMode('all');
     setViewMode('all');
   };
@@ -236,7 +247,10 @@ export function SectionBrowser({
             <MapPin className="w-4 h-4 text-charcoal-500 absolute left-3.5 top-3.5" />
             <select
               value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
+              onChange={(e) => {
+                setSelectedRegion(e.target.value);
+                setSelectedTown('all');
+              }}
               aria-label="Filter by region"
               className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-ivory-300 bg-ivory-50 text-xs sm:text-sm font-medium text-charcoal-900 focus:outline-none focus:ring-2 focus:ring-clay-500"
             >
@@ -249,6 +263,40 @@ export function SectionBrowser({
             </select>
           </div>
         </div>
+
+        {/* Town Filter Pills for Selected Region */}
+        {selectedRegion !== 'all' && REGION_TOWNS[selectedRegion]?.length ? (
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-ivory-100">
+            <span className="text-xs font-semibold text-charcoal-600 mr-1">
+              Towns in {selectedRegion.split(',')[0]}:
+            </span>
+            <button
+              type="button"
+              onClick={() => setSelectedTown('all')}
+              className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${
+                selectedTown === 'all'
+                  ? 'bg-forest-700 text-white'
+                  : 'bg-ivory-100 hover:bg-ivory-200 text-charcoal-700'
+              }`}
+            >
+              All Towns
+            </button>
+            {REGION_TOWNS[selectedRegion].map((town) => (
+              <button
+                key={town}
+                type="button"
+                onClick={() => setSelectedTown(town)}
+                className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${
+                  selectedTown === town
+                    ? 'bg-forest-700 text-white'
+                    : 'bg-ivory-100 hover:bg-ivory-200 text-charcoal-700'
+                }`}
+              >
+                {town}
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         {/* Secondary Filter Pills (Sub-types & Views) */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-ivory-100">

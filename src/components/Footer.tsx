@@ -166,8 +166,9 @@ export function Footer() {
             <ul className="space-y-2 text-xs text-ivory-200">
               <li>Greater Accra &amp; Tema</li>
               <li>Kumasi &amp; Ashanti Region</li>
-              <li>Takoradi &amp; Cape Coast</li>
-              <li>Tamale, Ho, Sunyani &amp; Koforidua</li>
+              <li>North East (Nalerigu, Walewale &amp; Kpasenkpe)</li>
+              <li>Tamale, Bolgatanga, Wa &amp; Damongo</li>
+              <li>Takoradi, Cape Coast, Ho &amp; Sunyani</li>
               <li>Lagos, Nairobi, Kigali &amp; Pan-African</li>
             </ul>
           </div>

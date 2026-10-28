@@ -17,6 +17,7 @@
 .env
 .env*.local
 /.data/
+ADMIN_REFERENCE.txt
 
 # Misc
 .DS_Store
