@@ -449,16 +449,29 @@ export function ListingDetailView({
                     <div className="flex flex-wrap items-center gap-2">
                       <a
                         href={`tel:${listing.contactPhone}`}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gold-400 text-charcoal-900 text-sm font-bold"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gold-400 hover:bg-gold-300 text-charcoal-900 text-sm font-bold transition-colors"
                       >
                         <Phone className="w-4 h-4" />
-                        <span>{formatPhoneForDisplay(listing.contactPhone)}</span>
+                        <span>Call {formatPhoneForDisplay(listing.contactPhone)}</span>
                       </a>
                       <a
-                        href={`https://wa.me/${listing.contactPhone.replace(/[^0-9]/g, '')}`}
+                        href={`sms:${listing.contactPhone}?body=${encodeURIComponent(
+                          `Hello ${listing.ownerDisplayName}, I saw your post "${listing.title}" (${listing.city}) on Oppora.`
+                        )}`}
+                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-ivory-100 hover:bg-white text-charcoal-900 text-xs font-bold transition-colors"
+                      >
+                        <span>Send SMS</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${listing.contactPhone.replace(
+                          /[^0-9]/g,
+                          ''
+                        )}?text=${encodeURIComponent(
+                          `Hello ${listing.ownerDisplayName}, I saw your post "${listing.title}" (${listing.city}) on Oppora.`
+                        )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs font-bold"
+                        className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs font-bold transition-colors"
                       >
                         <Share2 className="w-3.5 h-3.5" />
                         <span>Chat on WhatsApp</span>

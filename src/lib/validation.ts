@@ -167,14 +167,18 @@ export function validateListingPayload(payload: Record<string, unknown>): Valida
     errors.push('Title must be between 5 and 160 characters.');
   }
 
-  const summary = String(payload.summary || '').trim();
-  if (summary.length < 10 || summary.length > 320) {
-    errors.push('Short summary must be between 10 and 320 characters.');
-  }
-
   const description = String(payload.description || '').trim();
   if (description.length < 20 || description.length > 5000) {
     errors.push('Detailed description must be between 20 and 5,000 characters.');
+  }
+
+  const rawSummary = String(payload.summary || '').trim();
+  const summary =
+    rawSummary.length >= 10
+      ? rawSummary.slice(0, 320)
+      : description.replace(/\s+/g, ' ').slice(0, 220);
+  if (summary.length < 10) {
+    errors.push('Please provide at least 20 characters in the description.');
   }
 
   const category = String(payload.category || '').trim();

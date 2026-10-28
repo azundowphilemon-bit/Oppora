@@ -160,11 +160,16 @@ export function GlobalModals() {
     setCreateSubmitting(true);
 
     try {
+      const autoSummary =
+        summary.trim().length >= 10
+          ? summary.trim().slice(0, 320)
+          : description.trim().replace(/\s+/g, ' ').slice(0, 200);
+
       const payload = {
         section,
         category,
         title,
-        summary,
+        summary: autoSummary,
         description,
         country: 'Ghana',
         region,
@@ -821,30 +826,10 @@ export function GlobalModals() {
 
                 <div>
                   <label
-                    htmlFor="listing-summary"
-                    className="block text-xs font-semibold text-charcoal-800 mb-1"
-                  >
-                    Short Summary (10–320 characters) *
-                  </label>
-                  <input
-                    id="listing-summary"
-                    type="text"
-                    required
-                    minLength={10}
-                    maxLength={320}
-                    value={summary}
-                    onChange={(e) => setSummary(e.target.value)}
-                    placeholder="Brief one-sentence overview shown on listing cards..."
-                    className="w-full px-3.5 py-2 rounded-xl border border-ivory-300 bg-white text-xs text-charcoal-900"
-                  />
-                </div>
-
-                <div>
-                  <label
                     htmlFor="listing-description"
                     className="block text-xs font-semibold text-charcoal-800 mb-1"
                   >
-                    Full Details &amp; Instructions (20–5,000 characters) *
+                    Details &amp; Location Landmarks *
                   </label>
                   <textarea
                     id="listing-description"
@@ -854,7 +839,7 @@ export function GlobalModals() {
                     maxLength={5000}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Provide clear, honest details, location landmarks, requirements, and how community members should reach out..."
+                    placeholder="Write clear details, nearby town landmarks (e.g., near Walewale Lorry Station or Kpasenkpe JHS), and how people should reach you..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-ivory-300 bg-white text-xs text-charcoal-900 leading-relaxed"
                   />
                 </div>

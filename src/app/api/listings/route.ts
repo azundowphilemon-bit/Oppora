@@ -77,13 +77,20 @@ export async function POST(request: NextRequest) {
         ? new Date(body.expiresAt).toISOString()
         : defaultExpiry;
 
+    const cleanDescription = String(body.description).trim();
+    const rawSummary = String(body.summary || '').trim();
+    const autoSummary =
+      rawSummary.length >= 10
+        ? rawSummary.slice(0, 320)
+        : cleanDescription.replace(/\s+/g, ' ').slice(0, 200);
+
     const newListing: Listing = {
       id: `opp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       section,
       category: String(body.category).trim(),
       title: String(body.title).trim(),
-      summary: String(body.summary).trim(),
-      description: String(body.description).trim(),
+      summary: autoSummary,
+      description: cleanDescription,
       country: String(body.country || 'Ghana').trim(),
       region: String(body.region).trim(),
       city: String(body.city).trim(),
